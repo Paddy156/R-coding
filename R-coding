@@ -1,0 +1,87 @@
+Question R1
+Define the vector x <- c(5,9,2,3,4,6,7,0,8,12,2,9). For each of the following questions, you should use just a single line of code in R to calculate the answer (10 marks):
+a)     What is the sum of the first 4 elements?
+x <- c(5,9,2,3,4,6,7,0,8,12,2,9) sum  (x [1:4])
+## [1] 19
+After defining the vector x <- c(5,9,2,3,4,6,7,0,8,12,2,9) the sum command was used to add up the values in the vector. This command was paired with x [1:4] which tells the console to add up elements one to four in the vector x giving the answer 19.
+b)    What is the highest value in the vector?
+max  (x) ## [1] 12
+The max command outputs the highest value in a vector which is defined. Therefore, searches through the vector x and outputs the highest value, in this case it as 12.
+c ) Which position in the vector contains the highest value?
+which.max(x)## [1] 10
+The which.max command is similar to the max command but instead of outputting the value of the largest number it outputs the position. In this case the largest value ,12, in vector x is in the tenth position.
+d)    Which position in the vector would the highest value occur if the vector is reversed in order?
+which.max(rev(x)) ## [1] 3
+This combines commands, being able to put the rev command within the which.max and the rev command simply completely reverses the vector x so it is now back to front with the new position of the largest value ,12, being in position three.
+e)     How many values in the vector are lower than 10, but higher than 5?
+x >  5 &  x <  10
+##  [1] FALSE  TRUE FALSE FALSE FALSE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE
+This code utilises the greater than (>) and the less than (<) signs to give the values in x between six and (Seen using the & symbol which acts as an AND logic gate) nine. This outputs as Boolean being true or false and if count all true’s being in this inequality there are five numbers in the vector x between six and nine.
+Question R2
+For this question, use basic R commands. The file ‘cell_features.csv’ contains information from different cell lines and experiments that have been run in different fibronectin concentrations. Create a new data structure containing cell area means from batch A only and then calculate the median value and interquartile range of these. Now create a new vector of these cell area means where outliers are removed (defined as values 2 times the IQR above or below the median value) (14 marks).
+cell_features <-
+read.csv("C:/Users/presetup/OneDrive/assessment1/cell_features.csv")
+new_data <- cell_features[cell_features$batch ==  "Batch A", "cell_area_mean", drop = FALSE]
+This creates a new data structure called new_data which the specific data from the 
+cell_features file can be extracted into. In this case it is asking to console to look into the cell_features file specifically in the batch column and take out every string in the batch column with “Batch A” and pair this with their corresponding cell_area_mean value. The ‘, drop = FALSE’ command at the end tells the console to make this new data a data frame as then calculations can be carried out on it.
+median(new_data$cell_area_mean) ## [1] 3.135937This uses the median function to calculate the median of the data in new_data. However, the median function can only work on numerical data and the “Batch A” part of this data set is character data so it is specified to calculate the median of the cell_area_mean which is numerical data with the median being 3.135937.
+IQR(cell_features$cell_area_mean) ## [1] 0.2366678
+This uses the IQR (interquartile range) function to calculate the IQR of the data in 
+new_data. The same as median this function can only work on numerical data so the numerical column of data being cell_area_mean is specified to have its IQR calculated being 0.2366678.
+no_outliers <- c(new_data$cell_area_mean)
+no_outliers[no_outliers >  3.135937+(0.2366678*2) |  no_outliers <  3.135937- (0.2366678*2)]
+##  [1] 2.648073 2.649833 2.647312 2.290681 2.649414 2.540621 2.636693 
+2.607899
+##  [9] 2.587536 2.615723 2.552653 2.656859 2.646430 2.611666 2.619465 
+2.661895
+## [17] 2.567987 2.611164
+This firstly creates a new vector called no_outliers of just the cell_area_mean data from the new_data file as this is the numerical data we need. The next line is split into two functions:
+1.     no_outliers > 3.135937+(0.2366678*2): Tells the console in this new no_outliers vector if any values are larger than the median plus IQR multiplied by two do not include it.
+2. no_outliers < 3.135937-(0.2366678*2)]: Tells the console in this new no_outliers vector if any values are less than the median subtract the IQR multiplied by two do not include them.
+These two functions are split by a pipe which acts as an OR logic gate command allowing for both values greater than and lesser than to be excluded and a final list of the data with now outliers is then printed.
+Question R3
+The file ‘humans.csv’ contains information for ten individuals, detailing their sex, whether they are male, their age and their favourite colour. Load the file into R as an object, view it and correct any errors you observe using R directly. Calculate the mean age of individuals in the file - if you get any error messages along the way, try to work out why, and make the necessary changes to the object so that all future operations using the object will work as intended (12 marks).
+humans <- read.csv("C:/Users/presetup/OneDrive/assessment1/humans.csv") humans$Age <- as.numeric(humans$Age)## Warning: NAs introduced by coercion
+This changes the Age column in the humans dataset to be a numerical column as it was originally a character column and an error kept on occurring saying the True character could not be changed to a numerical value. This gives the warning making the Age column have NA data in the tenth row where the True statement was and now 29 can be added instead.
+new_value <- 29
+humans[10,"Age"] <- new_value
+This creates a new variable (29) which needs to be added to the Age row because at the moment it is in the wrong row and column. To do this we need to specifically insert this new value into the correct place by the code above humans[10, “Age”] <- new_value which is saying insert 29 into the tenth row in the Age column.
+new_value2 <- "True"
+humans[10, "Is_Male"] <- new_value2
+This creates a second new value being a string this time called “True” which needs to be added into the Is_Male column in the tenth row. The second line of code inserts this new string into the tenth row of the Is_Male column and now both are correctly in the right places.
+mean(humans$Age) ## [1] 35.9
+Now the Age column is numerical, and all the correct values are within it, the mean can be calculated by using the mean function followed by what dataset, in this case humans, and the column being Age of all numerical values with the mean coming out as 35.9.
+Question R4
+COVID-19 Data for the UK is hosted on the website https://coronavirus.data.gov.uk. Go to this site, browse the data and instructions and work out how to download the data directly into R (Not via a spreadsheet - Hint: Use the “Developer’s Guide” information, and make sure the numbers of cases are loaded by specimen date and not published date). Find the date in 2021 that had the highest number of cases. Comparing the figures at the very start of 2021 versus those at the very end of 2021, did COVID-19 case numbers go up or down? (14 marks).
+library(httr)
+This package needs to be activated so we can use the GET() function to be able to retrieve our COVID-19 datafile from the website it is located.
+library(jsonlite)
+This package allows us to convert the JSON datatype which this website data is in the format of into R objects which we can analyse.url <- "https://api.coronavirus.data.gov.uk/v1/data"
+parameters <- list(
+filters = "areaType=nation;areaCode=E92000001",
+structure = '{"date":"date","newCases":"newCasesBySpecimenDate"}' )
+response <- GET(url, query = parameters)
+covid_data <- fromJSON(content(response, as = "text"), flatten = TRUE)
+This set of code is used to retrieve and subsequently gives parameters to the data naming it covid_data which can then be analysed. The url variable retrieves the API webcode from the website which was found in the developer’s guide. The parameters variable lists the 2 parameters we would like; being what data we want to extract (filters) and then how it should be presented (structure). Response variable uses the httr package to retrieve this data then covid_data presents it in R using the fromJSON package function.
+covid_data_needed <- covid_data[["data"]]
+As this file retrieved is quite large the data part of it which contains the number of new cases from 2020 through to 2023 is given its own variable covid_data_needed so we can access it easier.
+covid_data_needed <- data.frame(covid_data_needed)
+This transforms the covid_data_needed information into a data frame because before this it was a list, with certain commands like ‘==’ not being able to function on a list but will on a data frame.
+covid_data_needed$date <- as.Date(covid_data_needed$date)
+This is a new variable created called as.Data which allows us to specify the column we want to look into without any syntax errors occurring.
+just_2021 <- covid_data_needed[covid_data_needed$date >=  as.Date("2021-01- 01") &  covid_data_needed$date <=  as.Date("2021-12-31"),]
+max_index <- which.max(just_2021$newCases)
+max_date <- just_2021$date[max_index]
+max_value <- just_2021$newCases[max_index]
+print(paste("Date:", max_date, ", Maximum newCases:", max_value)) ## [1] "Date: 2021-12-29 , Maximum newCases: 224031"
+1. just_2021 <- covid_data_needed[covid_data_needed$date >= as.Date("2021- 01-01") & covid_data_needed$date <= as.Date(“2021-12-31”),]: Creates a new variable called just_2021 and within this variable the whole year of 2021 from the covid_data_needed is put into it by an inequality line ranging from dates in 
+covid_data_needed from the first of January 2021 to the 31st of December 2021 so we can just analyse that year.
+2.     max_index <- which.max(just_2021$newCases): This variable is created to identify the row with the highest value in just_2021 data-frame.3.     max_date <- just_2021$date[max_index] & max_value <-
+just_2021$newCases[max_index]: These two both do very similar functions finding the date with the highest value (max_date) and the actual highest value (max_value) in the just_2021 data-frame.
+4.     print(paste(“Date:”, max_date, “, Maximum newCases:”, max_value)): A print and paste command to give us the output as seen above of the date with the maximum number of cases.
+covid_data_needed[covid_data_needed$date == as.Date("2021-01-01"), ]
+##            date newCases ## 1048 2021-01-01    28879
+Within the covid_data_needed data frame to look for a specific date we need to search in the date category as seen by covid_data_needed&date, and then the date is specified. Then the data from the start of the year being the first of January 2021 is retrieved with there being 28,879 new cases.
+covid_data_needed[covid_data_needed$date == as.Date("2021-12-31"), ]
+##           date newCases ## 684 2021-12-31   152887
+A very similar line of code here but this is for the end of the year 2021, being December 31st with there being 152,887 new cases and therefore COVID-19 case numbers have gone up in the year.
